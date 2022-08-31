@@ -10,6 +10,7 @@ import LanguageDropdown from "../components/LanguageDropdown";
 import ThemeDropdown from "../components/ThemeDropdown";
 import OutputWindow from "../components/OutputWindow";
 import CustomInput from "../components/CustomInput";
+import OutputDetails from "../components/OutputDetails";
 
 interface theme {
   value: string;
@@ -197,7 +198,7 @@ const Landing = () => {
             code={code}
           />
         </div>
-        <div className="w-3/12 ml-auto">
+        <div className="w-4/12 p-4 ml-auto">
           <OutputWindow outputDetails={outputDetails} />
           <div className="flex flex-col items-end">
             <CustomInput
@@ -214,6 +215,7 @@ const Landing = () => {
               {processing ? "Compiling..." : "Compile"}
             </button>
           </div>
+          <OutputDetails outputDetails={outputDetails} />
         </div>
       </div>
     </>
