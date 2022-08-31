@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LanguageDropdown from "../components/LanguageDropdown";
 import ThemeDropdown from "../components/ThemeDropdown";
 import OutputWindow from "../components/OutputWindow";
+import CustomInput from "../components/CustomInput";
 
 interface theme {
   value: string;
@@ -53,7 +54,7 @@ const Landing = () => {
     };
     const options = {
       method: "POST",
-      url: process.env.REACT_APP_RAPID_API_URL,
+      url: process.env.NEXT_PUBLIC_RAPID_API_URL,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "content-type": "application/json",
@@ -80,7 +81,7 @@ const Landing = () => {
   const checkStatus = async (token) => {
     const options = {
       method: "GET",
-      url: process.env.REACT_APP_RAPID_API_URL + "/" + token,
+      url: process.env.NEXT_PUBLIC_RAPID_API_URL + "/" + token,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
@@ -178,7 +179,7 @@ const Landing = () => {
         rtl={false}
       />
       <div className="h-4 w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500" />
-      <div className="flex flex-row">
+      <div className="flex flex-row mt-4">
         <div className="px-4 py-2">
           <LanguageDropdown onSelectChange={handleLanguageChange} />
         </div>
@@ -186,7 +187,7 @@ const Landing = () => {
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
       </div>
-      <div className="flex flex-row w-full justify-between px-4">
+      <div className="flex flex-row w-full justify-start px-4 mt-4">
         {/* code editor window */}
         <div className="flex flex-col w-8/12 h-full justify-start items-end">
           <CodeEditor
@@ -196,10 +197,24 @@ const Landing = () => {
             code={code}
           />
         </div>
-        <div className="w-3/12">
+        <div className="w-3/12 ml-auto">
           <OutputWindow outputDetails={outputDetails} />
+          <div className="flex flex-col items-end">
+            <CustomInput
+              customInput={customInput}
+              setCustomInput={setCustomInput}
+            />
+            <button
+              onClick={handleCompile}
+              disabled={!code}
+              className={`mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
+                ${!code && "opacity-50"}`}
+              // !code ? "opacity-50" : ""
+            >
+              {processing ? "Compiling..." : "Compile"}
+            </button>
+          </div>
         </div>
-        {/* output window */}
       </div>
     </>
   );
