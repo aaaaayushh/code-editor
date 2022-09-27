@@ -4,13 +4,15 @@ import axios from "axios";
 import { languageOptions } from "../constants/languageOptions";
 import useKeyPress from "../hooks/useKeyPress";
 import { defineTheme } from "../lib/defineTheme";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LanguageDropdown from "../components/LanguageDropdown";
 import ThemeDropdown from "../components/ThemeDropdown";
 import OutputWindow from "../components/OutputWindow";
 import CustomInput from "../components/CustomInput";
 import OutputDetails from "../components/OutputDetails";
+import Navbar from "../components/Navbar";
+import { showErrorToast, showSuccessToast } from "../lib/toast";
 
 interface theme {
   value: string;
@@ -113,7 +115,7 @@ const Landing = () => {
     } catch (err) {
       console.log("check status error", err);
       setProcessing(false);
-      showErrorToast();
+      showErrorToast("Something went wrong! Please try again later.");
     }
   };
 
@@ -146,28 +148,6 @@ const Landing = () => {
       }
     }
   };
-  const showSuccessToast = (msg) => {
-    toast.success(msg || `Compiled Successfully!`, {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
-  const showErrorToast = (msg?) => {
-    toast.error(msg || `Something went wrong! Please try again.`, {
-      position: "top-right",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-  };
 
   return (
     <>
@@ -179,8 +159,9 @@ const Landing = () => {
         closeOnClick
         rtl={false}
       />
-      <div className="h-4 w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500" />
-      <div className="flex flex-row mt-4">
+      <div className="h-2 w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500" />
+      <Navbar />
+      <div className="flex flex-row">
         <div className="px-4 py-2">
           <LanguageDropdown onSelectChange={handleLanguageChange} />
         </div>
@@ -193,7 +174,7 @@ const Landing = () => {
         <div className="flex flex-col w-8/12 h-full justify-start items-end">
           <CodeEditor
             onChange={onCodeChange}
-            language={language}
+            language={language.value}
             theme={theme.value}
             code={code}
           />
