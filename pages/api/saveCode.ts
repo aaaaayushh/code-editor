@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connectToDatabase } from "../../lib/mongodb";
+import {v4 as uuidv4} from 'uuid';
 
 async function handler(req:NextApiRequest,res:NextApiResponse){
     if(req.method === "POST"){
-        const {code,email} = req.body;
+        const {code,email,title} = req.body;
 
         let {db} = await connectToDatabase();
 
@@ -12,7 +13,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         //create document if user is saving code for first time
         if(!checkUser){
             try{
-                const status = await db.collection('codes').insertOne({email:email,codes:[code]});
+                const status = await db.collection('codes').insertOne({email:email,codes:[{id:uuidv4(),title:title,code:code}]});
                 res.status(201).json({msg:"Code saved",...status});
 
             }catch(err){
@@ -23,7 +24,7 @@ async function handler(req:NextApiRequest,res:NextApiResponse){
         //else update existing document by pushing the code to the codes array
         else{
             try{
-                const status = await db.collection('codes').updateOne({email:email},{$push:{codes:code}});
+                const status = await db.collection('codes').updateOne({email:email},{$push:{codes:{id:uuidv4(),title:title,code:code}}});
                 res.status(201).json({msg:"Code saved",...status});
             }catch(err){
                 console.log(err);

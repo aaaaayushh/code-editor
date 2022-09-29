@@ -170,10 +170,18 @@ const Landing = () => {
       body: JSON.stringify({
         email: data.user.email,
         code: code,
+        title: codeTitle,
       }),
     });
-    const ret = await res.json();
-    console.log(ret);
+    console.log(res);
+    if (res.status === 201) {
+      showSuccessToast("Code Saved!");
+      setShowSaveCode(false);
+    } else {
+      showErrorToast("An error occured! Please try again later!");
+    }
+    // const ret = await res.json();
+    // console.log(ret);
   };
   return (
     <>
@@ -236,21 +244,26 @@ const Landing = () => {
               <ModalHeader>Save your code snippet</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <label htmlFor="title" className="text-sm">
-                  Code Title
-                </label>
-                <input
-                  type="text"
-                  value={codeTitle}
-                  name="title"
-                  onChange={(e) => setCodeTitle(e.target.value)}
-                  className="w-full border-2 border-black border-solid focus:outline-none p-3"
-                />
-                <textarea
-                  value={code}
-                  className="w-full border-2 border-black border-solid focus:outline-none p-3 resize-none"
-                  disabled
-                />
+                <form>
+                  <label htmlFor="title" className="text-sm">
+                    Code Title
+                  </label>
+                  <input
+                    type="text"
+                    value={codeTitle}
+                    name="title"
+                    onChange={(e) => setCodeTitle(e.target.value)}
+                    className="w-full border-2 border-black border-solid focus:outline-none p-3"
+                    required
+                  />
+                  <p className="text-sm mt-4">Code</p>
+                  <textarea
+                    name="code"
+                    value={code}
+                    className="w-full border-2 border-black border-solid focus:outline-none p-3 resize-none"
+                    disabled
+                  />
+                </form>
               </ModalBody>
               <ModalFooter>
                 <button
@@ -259,7 +272,10 @@ const Landing = () => {
                 >
                   Cancel
                 </button>
-                <button className="font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0">
+                <button
+                  onClick={handleSaveCode}
+                  className="font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0"
+                >
                   Save
                 </button>
               </ModalFooter>
