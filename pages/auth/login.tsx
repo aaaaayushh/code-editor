@@ -45,7 +45,7 @@ const Login = () => {
 
   return (
     <div className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 h-screen flex items-center ">
-      <div className="m-auto p-12 border w-4/12 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0)] rounded-xl">
+      <div className="m-auto p-12 border w-4/12 bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0)] rounded-xl">
         <p className="text-4xl text-center font-bold">Log In</p>
         <div className="mt-12 mx-auto">
           <form className="flex flex-col" onSubmit={handleSubmit}>

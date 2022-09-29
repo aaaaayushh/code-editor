@@ -38,7 +38,6 @@ const Landing = () => {
   const [processing, setProcessing] = useState(null);
   const [showSaveCode, setShowSaveCode] = useState<boolean>(false);
   const [codeTitle, setCodeTitle] = useState<string>("");
-
   const [theme, setTheme] = useState<theme>({
     value: "cobalt",
     label: "Cobalt",
@@ -222,8 +221,11 @@ const Landing = () => {
             <div className="flex w-full justify-between">
               {status === "authenticated" && (
                 <button
-                  className={`mt-4 font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0`}
+                  className={`${
+                    !code && "opacity-50"
+                  } mt-4 font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0`}
                   onClick={() => setShowSaveCode(true)}
+                  disabled={!code}
                 >
                   Save code
                 </button>
