@@ -7,19 +7,13 @@ export default NextAuth({
   //Configure JWT
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60,
   },
   //Specify Provider
   providers: [
     CredentialsProvider({
       name: "code-editor",
-      credentials: {
-        // email: {
-        //   label: "email",
-        //   type: "email",
-        //   placeholder: "example@example.com",
-        // },
-        // password: { label: "Password", type: "password" },
-      },
+      credentials: {},
       async authorize(credentials) {
         //Connect to DB
         const { db } = await connectToDatabase();

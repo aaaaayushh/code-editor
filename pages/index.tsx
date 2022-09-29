@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import CodeEditor from "../components/CodeEditor";
+import { useSession } from "next-auth/react";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import CodeEditor from "../components/CodeEditor";
 import { languageOptions } from "../constants/languageOptions";
 import useKeyPress from "../hooks/useKeyPress";
 import { defineTheme } from "../lib/defineTheme";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import LanguageDropdown from "../components/LanguageDropdown";
 import ThemeDropdown from "../components/ThemeDropdown";
 import OutputWindow from "../components/OutputWindow";
@@ -21,10 +31,13 @@ interface theme {
 }
 
 const Landing = () => {
+  const { status, data } = useSession();
   const [code, setCode] = useState<string>("//Write your code here");
   const [customInput, setCustomInput] = useState<string>("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
+  const [showSaveCode, setShowSaveCode] = useState<boolean>(false);
+  const [codeTitle, setCodeTitle] = useState<string>("");
 
   const [theme, setTheme] = useState<theme>({
     value: "cobalt",
@@ -36,7 +49,6 @@ const Landing = () => {
   const ctrlPress = useKeyPress("Control");
 
   const handleThemeChange = (th) => {
-    console.log(th);
     if (["light", "vs-dark"].includes(th.value)) {
       setTheme(th);
     } else {
@@ -130,12 +142,12 @@ const Landing = () => {
   }, []);
 
   //keyboard shortcut for compiling editor code
-  useEffect(() => {
-    //compile code
-    if (enterPress && ctrlPress) {
-      handleCompile();
-    }
-  }, [ctrlPress, enterPress]);
+  // useEffect(() => {
+  //   //compile code
+  //   if (enterPress && ctrlPress) {
+  //     handleCompile();
+  //   }
+  // }, [ctrlPress, enterPress]);
 
   const onCodeChange = (action, data) => {
     switch (action) {
@@ -149,6 +161,20 @@ const Landing = () => {
     }
   };
 
+  const handleSaveCode = async () => {
+    const res = await fetch("/api/saveCode", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: data.user.email,
+        code: code,
+      }),
+    });
+    const ret = await res.json();
+    console.log(ret);
+  };
   return (
     <>
       <ToastContainer
@@ -159,7 +185,6 @@ const Landing = () => {
         closeOnClick
         rtl={false}
       />
-      <div className="h-2 w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500" />
       <Navbar />
       <div className="flex flex-row">
         <div className="px-4 py-2">
@@ -186,16 +211,60 @@ const Landing = () => {
               customInput={customInput}
               setCustomInput={setCustomInput}
             />
-            <button
-              onClick={handleCompile}
-              disabled={!code}
-              className={`mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
-                ${!code && "opacity-50"}`}
-              // !code ? "opacity-50" : ""
-            >
-              {processing ? "Compiling..." : "Compile"}
-            </button>
+            <div className="flex w-full justify-between">
+              {status === "authenticated" && (
+                <button
+                  className={`mt-4 font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0`}
+                  onClick={() => setShowSaveCode(true)}
+                >
+                  Save code
+                </button>
+              )}
+              <button
+                onClick={handleCompile}
+                disabled={!code}
+                className={`mt-4 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
+              ${!code && "opacity-50"}`}
+              >
+                {processing ? "Compiling..." : "Compile"}
+              </button>
+            </div>
           </div>
+          <Modal isOpen={showSaveCode} onClose={() => setShowSaveCode(false)}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Save your code snippet</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <label htmlFor="title" className="text-sm">
+                  Code Title
+                </label>
+                <input
+                  type="text"
+                  value={codeTitle}
+                  name="title"
+                  onChange={(e) => setCodeTitle(e.target.value)}
+                  className="w-full border-2 border-black border-solid focus:outline-none p-3"
+                />
+                <textarea
+                  value={code}
+                  className="w-full border-2 border-black border-solid focus:outline-none p-3 resize-none"
+                  disabled
+                />
+              </ModalBody>
+              <ModalFooter>
+                <button
+                  className="mr-4 font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0"
+                  onClick={() => setShowSaveCode(false)}
+                >
+                  Cancel
+                </button>
+                <button className="font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0">
+                  Save
+                </button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
           <OutputDetails outputDetails={outputDetails} />
         </div>
       </div>
