@@ -2,6 +2,7 @@ import Router from "next/router";
 import React, { useState } from "react";
 import { showErrorToast, showSuccessToast } from "../../lib/toast";
 import "react-toastify/dist/ReactToastify.css";
+import { signIn } from "next-auth/react";
 
 const Signup = () => {
   const [email, setEmail] = useState<string>("");
@@ -39,10 +40,15 @@ const Signup = () => {
       );
       setProcessing(false);
     } else {
-      showSuccessToast(
-        "Successfully signed up! Please login into your account on the next screen."
-      );
-      setTimeout(() => Router.push("/auth/login"), 2000);
+      showSuccessToast("Successfully signed up!");
+      await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "http://localhost:3000",
+        redirect: false,
+      }).then(() => {
+        Router.push("/");
+      });
     }
     setProcessing(false);
   };
