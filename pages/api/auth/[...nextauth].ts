@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { connectToDatabase } from "../../../lib/mongodb";
 
-export default NextAuth({
+export const authOptions:NextAuthOptions = {
   //Configure JWT
   session: {
     strategy: "jwt",
@@ -14,7 +14,7 @@ export default NextAuth({
     CredentialsProvider({
       name: "code-editor",
       credentials: {},
-      async authorize(credentials) {
+      async authorize(credentials:any) {
         //Connect to DB
         const { db } = await connectToDatabase();
         try {
@@ -47,12 +47,14 @@ export default NextAuth({
           console.log(err);
         }
       },
-      secret: process.env.NEXTAUTH_SECRET,
+      // secret: process.env.NEXTAUTH_SECRET,
 
-      pages: {
-        signIn: "/auth/login",
-      },
-      debug: process.env.NEXT_PUBLIC_NODE_ENV === "development",
+      // pages: {
+      //   signIn: "/auth/login",
+      // },
+      // debug: process.env.NEXT_PUBLIC_NODE_ENV === "development",
     }),
   ],
-});
+};
+
+export default NextAuth(authOptions);

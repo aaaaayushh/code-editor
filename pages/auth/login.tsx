@@ -29,7 +29,6 @@ const Login = () => {
       console.log(result);
       if (result.error !== null) {
         if (result.status === 401) {
-          // setLoginError("Your username/password combination was incorrect. Please try again");
           console.log("Invalid creds");
           showErrorToast("Incorrect Email or Password");
         } else {

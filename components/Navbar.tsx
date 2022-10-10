@@ -22,7 +22,7 @@ const Navbar = () => {
             Home
           </a>
         </Link>
-        {/* {status === "authenticated" && (
+        {status === "authenticated" && (
           <Link href="/dashboard">
             <a
               className={`mx-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
@@ -31,7 +31,7 @@ const Navbar = () => {
               Dashboard
             </a>
           </Link>
-        )} */}
+        )}
         {status === "authenticated" ? (
           <button
             className={`mx-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0

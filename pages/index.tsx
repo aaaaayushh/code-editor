@@ -21,7 +21,6 @@ import ThemeDropdown from "../components/ThemeDropdown";
 import OutputWindow from "../components/OutputWindow";
 import CustomInput from "../components/CustomInput";
 import OutputDetails from "../components/OutputDetails";
-import Navbar from "../components/Navbar";
 import { showErrorToast, showSuccessToast } from "../lib/toast";
 
 interface theme {
@@ -30,14 +29,27 @@ interface theme {
   key?: string;
 }
 
-const Landing = () => {
+export interface LandingProps {
+  code?: string;
+  codeId?: string;
+  title?: string;
+  update?: boolean;
+  description?: string;
+}
+
+const Landing = (props: LandingProps) => {
   const { status, data } = useSession();
-  const [code, setCode] = useState<string>("//Write your code here");
+  const [code, setCode] = useState<string>(
+    props.code || "//Write your code here"
+  );
   const [customInput, setCustomInput] = useState<string>("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(null);
   const [showSaveCode, setShowSaveCode] = useState<boolean>(false);
-  const [codeTitle, setCodeTitle] = useState<string>("");
+  const [codeTitle, setCodeTitle] = useState<string>(props.title || "");
+  const [codeDescription, setCodeDescription] = useState<string>(
+    props.description || ""
+  );
   const [theme, setTheme] = useState<theme>({
     value: "cobalt",
     label: "Cobalt",
@@ -170,17 +182,40 @@ const Landing = () => {
         email: data.user.email,
         code: code,
         title: codeTitle,
+        description: codeDescription,
       }),
     });
-    console.log(res);
+    const ret = await res.json();
+    console.log(ret);
     if (res.status === 201) {
       showSuccessToast("Code Saved!");
       setShowSaveCode(false);
     } else {
       showErrorToast("An error occured! Please try again later!");
     }
-    // const ret = await res.json();
-    // console.log(ret);
+  };
+
+  const handleUpdateCode = async () => {
+    const res = await fetch("/api/updateCode", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code: code,
+        title: codeTitle,
+        description: codeDescription,
+        codeId: props.codeId,
+      }),
+    });
+    const ret = await res.json();
+    console.log(ret);
+    if (res.status === 200) {
+      showSuccessToast("Code Updated!");
+      setShowSaveCode(false);
+    } else {
+      showErrorToast("An error occured! Please try again later!");
+    }
   };
   return (
     <>
@@ -192,7 +227,6 @@ const Landing = () => {
         closeOnClick
         rtl={false}
       />
-      <Navbar />
       <div className="flex flex-row">
         <div className="px-4 py-2">
           <LanguageDropdown onSelectChange={handleLanguageChange} />
@@ -219,7 +253,7 @@ const Landing = () => {
               setCustomInput={setCustomInput}
             />
             <div className="flex w-full justify-between">
-              {status === "authenticated" && (
+              {status === "authenticated" && !props.codeId && (
                 <button
                   className={`${
                     !code && "opacity-50"
@@ -228,6 +262,17 @@ const Landing = () => {
                   disabled={!code}
                 >
                   Save code
+                </button>
+              )}
+              {status === "authenticated" && props.codeId && (
+                <button
+                  className={`${
+                    !code && "opacity-50"
+                  } mt-4 font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0`}
+                  onClick={() => setShowSaveCode(true)}
+                  disabled={!code}
+                >
+                  Update code
                 </button>
               )}
               <button
@@ -247,22 +292,29 @@ const Landing = () => {
               <ModalCloseButton />
               <ModalBody>
                 <form>
-                  <label htmlFor="title" className="text-sm">
-                    Code Title
-                  </label>
+                  <p className="text-sm">Code Title</p>
                   <input
                     type="text"
                     value={codeTitle}
                     name="title"
                     onChange={(e) => setCodeTitle(e.target.value)}
-                    className="w-full border-2 border-black border-solid focus:outline-none p-3"
+                    className="w-full border-2 border-black border-solid rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] focus:outline-none p-3"
+                    required
+                  />
+                  <p className="text-sm mt-4">Code Description</p>
+                  <input
+                    type="text"
+                    value={codeDescription}
+                    onChange={(e) => setCodeDescription(e.target.value)}
+                    name="description"
+                    className="w-full border-2 border-black border-solid rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] focus:outline-none p-3"
                     required
                   />
                   <p className="text-sm mt-4">Code</p>
                   <textarea
                     name="code"
                     value={code}
-                    className="w-full border-2 border-black border-solid focus:outline-none p-3 resize-none"
+                    className="w-full border-2 border-black border-solid rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] focus:outline-none p-3 resize-none"
                     disabled
                   />
                 </form>
@@ -274,12 +326,21 @@ const Landing = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={handleSaveCode}
-                  className="font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0"
-                >
-                  Save
-                </button>
+                {props.update ? (
+                  <button
+                    onClick={handleUpdateCode}
+                    className="font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0"
+                  >
+                    Update
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSaveCode}
+                    className="font-black border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0"
+                  >
+                    Save
+                  </button>
+                )}
               </ModalFooter>
             </ModalContent>
           </Modal>
