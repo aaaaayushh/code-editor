@@ -3,7 +3,7 @@ export const customStyles = {
       ...styles,
       width: "100%",
       maxWidth: "14rem",
-      minWidth: "12rem",
+      minWidth: "4rem",
       borderRadius: "5px",
       color: "#000",
       fontSize: "0.8rem",

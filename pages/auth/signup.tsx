@@ -55,7 +55,7 @@ const Signup = () => {
 
   return (
     <div className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 h-screen flex items-center">
-      <div className="m-auto p-12 border w-4/12 bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0)] rounded-xl">
+      <div className="m-auto p-12 border w-full md:w-4/12 bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0)] rounded-xl">
         <p className="text-4xl text-center font-bold">Sign Up!</p>
         <div className="mt-12 mx-auto">
           <form className="flex flex-col" onSubmit={onSubmit}>
@@ -86,7 +86,7 @@ const Signup = () => {
                   required
                 />
                 <p
-                  className="text-sm p-3 w-2/12 text-center border-0 border-l-2 my-auto cursor-pointer"
+                  className="text-sm p-3 w-4/12 md:w-2/12 text-center border-0 border-l-2 my-auto cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? "Hide" : "Show"}
@@ -110,7 +110,7 @@ const Signup = () => {
                   required
                 />
                 <p
-                  className="text-sm p-3 w-2/12 text-center border-0 border-l-2 my-auto cursor-pointer"
+                  className="text-sm p-3 w-4/12 md:w-2/12 text-center border-0 border-l-2 my-auto cursor-pointer"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
                   {showConfirmPassword ? "Hide" : "Show"}
@@ -119,8 +119,8 @@ const Signup = () => {
             </div>
             <button
               type="submit"
-              className={`mx-4 cursor-pointer w-4/12 ml-auto mr-auto border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0
-              ${processing && "opacity-50"}`}
+              className={`mx-4 cursor-pointer w-5/12 ml-auto mr-auto border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0
+              ${processing && "opacity-50 w-7/12"}`}
             >
               {processing ? (
                 <div className="flex justify-center">

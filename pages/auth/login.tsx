@@ -44,7 +44,7 @@ const Login = () => {
 
   return (
     <div className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 h-screen flex items-center ">
-      <div className="m-auto p-12 border w-4/12 bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0)] rounded-xl">
+      <div className="m-auto p-12 border w-full md:w-4/12 bg-white shadow-[10px_10px_0px_0px_rgba(0,0,0)] rounded-xl">
         <p className="text-4xl text-center font-bold">Log In</p>
         <div className="mt-12 mx-auto">
           <form className="flex flex-col" onSubmit={handleSubmit}>
@@ -75,7 +75,7 @@ const Login = () => {
                   required
                 />
                 <p
-                  className="text-sm p-3 w-2/12 text-center border-0 border-l-2 my-auto cursor-pointer"
+                  className="text-sm md:p-3 p-1 w-4/12 md:w-2/12 text-center border-0 border-l-2 my-auto cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? "Hide" : "Show"}

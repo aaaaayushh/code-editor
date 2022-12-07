@@ -12,7 +12,7 @@ const Dashboard = (props) => {
       <p className="text-5xl mt-6 font-black text-start">Your Dashboard</p>
       {!codes && (
         <>
-          <p className="text-2xl font-black text-center">
+          <p className="text-xl mt-4 md:text-3xl font-black text-center">
             Save your codes to access them from your Dashboard!
           </p>
           <div className="text-center mt-4">
@@ -24,10 +24,10 @@ const Dashboard = (props) => {
           </div>
         </>
       )}
-      <div className="flex justify-start mt-12 w-10/12 mx-auto">
+      <div className="flex flex-col md:flex-row justify-start mt-12 w-full md:w-10/12 mx-auto">
         {codes?.map((code, idx) => (
           <Link href={`/code/${code._id}`} key={idx}>
-            <div className="flex flex-col mx-8 cursor-pointer p-4 w-3/12 h-52 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0">
+            <div className="flex flex-col mb-4 md:mb-0 md:mx-8 cursor-pointer p-4 w-full md:w-5/12 lg:w-4/12 xl:w-3/12 h-52 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0">
               <p className="text-3xl text-center font-bolder border-b-2 border-black border-solid">
                 {code.title}
               </p>

@@ -227,17 +227,17 @@ const Landing = (props: LandingProps) => {
         closeOnClick
         rtl={false}
       />
-      <div className="flex flex-row">
-        <div className="px-4 py-2">
+      <div className="flex flex-row w-full justify-between md:justify-start">
+        <div className="md:px-4 py-2 px-2 w-5/12 md:w-auto">
           <LanguageDropdown onSelectChange={handleLanguageChange} />
         </div>
-        <div className="px-4 py-2">
+        <div className="md:px-4 py-2 px-2 w-5/12 md:w-auto">
           <ThemeDropdown handleThemeChange={handleThemeChange} theme={theme} />
         </div>
       </div>
-      <div className="flex flex-row w-full justify-start px-4 mt-4">
+      <div className="flex flex-col md:flex-row w-full justify-start px-4 mt-4">
         {/* code editor window */}
-        <div className="flex flex-col w-8/12 h-full justify-start items-end">
+        <div className="md:flex flex-col w-full md:w-8/12 md:h-full h-96 justify-start items-end">
           <CodeEditor
             onChange={onCodeChange}
             language={language.value}
@@ -245,7 +245,7 @@ const Landing = (props: LandingProps) => {
             code={code}
           />
         </div>
-        <div className="w-4/12 p-4 ml-auto">
+        <div className="w-full md:w-4/12 p-4 ml-auto">
           <OutputWindow outputDetails={outputDetails} />
           <div className="flex flex-col items-end">
             <CustomInput
@@ -345,6 +345,7 @@ const Landing = (props: LandingProps) => {
             </ModalContent>
           </Modal>
           <OutputDetails outputDetails={outputDetails} />
+          <div className="mb-20" />
         </div>
       </div>
     </>

@@ -21,6 +21,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700;800;900&display=swap"
           rel="stylesheet"
         />
+        <title>Code Editor</title>
       </Head>
       <SessionProvider session={session}>
         <ChakraProvider>
@@ -34,8 +35,13 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             draggable
             pauseOnHover
           />
-          <Navbar />
+          <div className="hidden md:block">
+            <Navbar />
+          </div>
           <Component {...pageProps} />
+          <div className="block md:hidden fixed bottom-0 z-10 w-full">
+            <Navbar />
+          </div>
         </ChakraProvider>
       </SessionProvider>
     </>
