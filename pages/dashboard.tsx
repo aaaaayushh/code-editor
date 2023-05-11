@@ -5,7 +5,6 @@ import Link from "next/link";
 import { connectToDatabase } from "../lib/mongodb";
 
 const Dashboard = (props) => {
-  console.log(props);
   const { codes } = props;
   return (
     <div className="p-4">

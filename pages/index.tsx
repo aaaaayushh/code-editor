@@ -35,7 +35,11 @@ export interface LandingProps {
   title?: string;
   update?: boolean;
   description?: string;
+  pairCode?:boolean;
+  socketRef?:any;
+  roomId?:string;
 }
+
 
 const Landing = (props: LandingProps) => {
   const { status, data } = useSession();
@@ -55,9 +59,6 @@ const Landing = (props: LandingProps) => {
     label: "Cobalt",
   });
   const [language, setLanguage] = useState(languageOptions[0]);
-
-  const enterPress = useKeyPress("Enter");
-  const ctrlPress = useKeyPress("Control");
 
   const handleThemeChange = (th) => {
     if (["light", "vs-dark"].includes(th.value)) {
@@ -142,6 +143,7 @@ const Landing = (props: LandingProps) => {
     }
   };
 
+
   //set initial theme for the editor
   useEffect(() => {
     defineTheme("oceanic-next").then((_) => {
@@ -150,20 +152,22 @@ const Landing = (props: LandingProps) => {
         label: "Oceanic Next",
       });
     });
+      // const socket = socketIOClient("localhost:3001");
+      // socket.emit("join","abc");
   }, []);
-
-  //keyboard shortcut for compiling editor code
-  // useEffect(() => {
-  //   //compile code
-  //   if (enterPress && ctrlPress) {
-  //     handleCompile();
-  //   }
-  // }, [ctrlPress, enterPress]);
 
   const onCodeChange = (action, data) => {
     switch (action) {
       case "code": {
         setCode(data);
+        break;
+      }
+      case "pairCode":{
+        console.log(data);
+        setCode(data);
+        props.socketRef.emit("CODE_CHANGE",props.roomId,{
+          data
+        });
         break;
       }
       default: {
@@ -236,13 +240,13 @@ const Landing = (props: LandingProps) => {
         </div>
       </div>
       <div className="flex flex-col md:flex-row w-full justify-start px-4 mt-4">
-        {/* code editor window */}
         <div className="md:flex flex-col w-full md:w-8/12 md:h-full h-96 justify-start items-end">
           <CodeEditor
             onChange={onCodeChange}
             language={language.value}
             theme={theme.value}
             code={code}
+            action={props.pairCode ? "pairCode":"code"}
           />
         </div>
         <div className="w-full md:w-4/12 p-4 ml-auto">

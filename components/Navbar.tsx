@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { UUID } from "bson";
 const Navbar = () => {
   const { status, data } = useSession();
   const [loggingOut, setLoggingOut] = useState<boolean>(false);
@@ -23,14 +24,24 @@ const Navbar = () => {
           </a>
         </Link>
         {status === "authenticated" && (
-          <Link href="/dashboard">
+          <>
+            <Link href="/dashboard">
+              <a
+                className={` mx-2 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-3 md:px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
+                `}
+                >
+                Dashboard
+              </a>
+            </Link>
+            <Link href={`/code/pair/${new UUID()}`}>
             <a
-              className={` mx-2 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-3 md:px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
-`}
-            >
-              Dashboard
-            </a>
-          </Link>
+                className={` mx-2 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-3 md:px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0 
+                `}
+                >
+                Start Pair Session
+              </a>
+            </Link>
+          </>
         )}
         {status === "authenticated" ? (
           <button
